@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
-// NOTE - "validator" external library and not the custom middleware at src/middlewares/validate.js
 const validator = require("validator");
 const config = require("../config/config");
+const validate = require("../middlewares/validate");
+const bcrypt = require("bcryptjs");
 
 // TODO: memberverify_TASK_MODULE_UNDERSTANDING_BASICS - Complete userSchema, a Mongoose schema for "users" collection
 const userSchema = mongoose.Schema(
@@ -11,11 +12,12 @@ const userSchema = mongoose.Schema(
       required: true,
       trim: true,
     },
-    type: {
+    role: {
       type: String,
       required: true,
       trim: true,
       lowercase: true,
+      enum: ["owner", "member"],
     },
     gender: {
       type: String,
@@ -23,7 +25,16 @@ const userSchema = mongoose.Schema(
       trim: true,
       lowercase: true,
     },
-    phone: {},
+    phone: {
+      type: String,
+      required: true,
+      trim: true,
+      validate(value) {
+        if (!validator.isMobilePhone(value)) {
+          throw new Error("invalid phone number");
+        }
+      },
+    },
     email: {
       type: String,
       required: false,
@@ -80,6 +91,31 @@ userSchema.statics.isEmailTaken = async function (email) {
   const user = await this.findOne({ email: email });
   return user;
 };
+
+userSchema.methods.isPasswordMatch = async function (password) {
+  const user = this;
+  return await bcrypt.compare(password, user.password);
+};
+
+// /**
+//  * Check if user have set an address other than the default address
+//  * - should return true if user has set an address other than default address
+//  * - should return false if user's address is the default address
+//  *
+//  * @returns {Promise<boolean>}
+//  */
+// userSchema.methods.hasSetNonDefaultAddress = async function () {
+//   const user = this;
+//   return user.address !== config.default_address;
+// };
+
+userSchema.pre("save", async function (next) {
+  const user = this;
+  if (user.isModified("password")) {
+    user.password = await bcrypt.hash(user.password, 10);
+  }
+  next();
+});
 
 const User = mongoose.model("User", userSchema);
 module.exports = { User };

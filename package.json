@@ -4,13 +4,37 @@
   "description": "gym backend memberverify",
   "main": "index.js",
   "scripts": {
+    "deploy_start": "nodemon node ./src/index.js",
+    "start": "node ./src/index.local.js",
+    "dev": "nodemon start ./src/index.local.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "http-status": "^1.7.4",
-    "mongoose": "^8.4.1"
+    "joi": "^17.3.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^8.4.1",
+    "passport": "^0.4.0",
+    "passport-jwt": "^4.0.0",
+    "pm2": "^4.5.0",
+    "typescript": "^3.2.1",
+    "validator": "^13.0.0",
+    "winston": "^3.2.1"
+  },
+  "devDependencies": {
+    "faker": "^5.1.0",
+    "jest": "^22.4.4",
+    "mockingoose": "~2.13.2",
+    "node-mocks-http": "^1.8.0",
+    "nodemon": "^3.1.3",
+    "prettier": "^2.0.5",
+    "supertest": "^4.0.2"
   }
 }

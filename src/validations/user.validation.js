@@ -12,11 +12,17 @@ const { objectId } = require("./custom.validation");
 //   }),
 // };
 
+const updateUser = {
+  params: Joi.object().keys({
+    userId: Joi.string().custom(objectId),
+  }),
+};
 const getUser = {
   params: Joi.object().keys({
-    userId: Joi.string().custom(objectId)
+    userId: Joi.string().custom(objectId),
   }),
 };
 module.exports = {
   getUser,
+  updateUser,
 };

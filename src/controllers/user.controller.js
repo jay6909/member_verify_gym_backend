@@ -1,6 +1,6 @@
 const httpStatus = require("http-status");
 const ApiError = require("../utils/ApiError");
-const catchAsync = require("../utils/catchAsync");
+const catchAsync = require("../utils/catchAsync.js");
 const { userService } = require("../services");
 const { User } = require("../models");
 
@@ -53,7 +53,15 @@ const addUser = catchAsync(async (req, res) => {
   return res.status(200).send(data);
 });
 
+const updateUser = catchAsync(async (req, res) => {
+  //   console.log();
+  //   return res.send("done");
+  const data = await userService.updateUser(req.params.userId, req.body);
+  return res.status(200).send({ message: "updated", data: data });
+});
+
 module.exports = {
   getUser,
   addUser,
+  updateUser,
 };

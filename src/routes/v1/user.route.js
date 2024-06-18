@@ -2,10 +2,7 @@ const express = require("express");
 const validate = require("../../middlewares/validate");
 const userValidation = require("../../validations/user.validation");
 const userController = require("../../controllers/user.controller");
-const { isEmailTaken } = require("../../models/user.model");
-const { User } = require("../../models");
-const mongoose = require("mongoose");
-const { userService } = require("../../services");
+const auth = require("../../middlewares/auth");
 const router = express.Router();
 
 router.get(
@@ -14,8 +11,13 @@ router.get(
   userController.getUser
 );
 
-router.post("/", validate(userValidation.createUser), userController.addUser);
+router.put(
+  "/:userId",
+  auth,
+  validate(userValidation.updateUser),
+  userController.updateUser
+);
 
 //profile pic, name, phone number, email, gender
-router.put("/", (req, res) => {});
+// router.put("/", validate(userValidation.editUser), userController.editUser);
 module.exports = router;
